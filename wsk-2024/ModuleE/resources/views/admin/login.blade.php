@@ -15,7 +15,7 @@
             <input type="text" placeholder="name" name="name" value="{{old('name')}}">
             <input type="password" placeholder="password" name="password">
             @if($errors->any())
-                <p>{{$errors->first()}}</p>
+                <p class="err">{{$errors->first()}}</p>
             @endif
             <button type="submit">Login</button>
         </form>

@@ -13,6 +13,5 @@ class Result extends Model
         'poll_id',
         'question_id',
         'answer_id',
-        'count',
     ];
 }

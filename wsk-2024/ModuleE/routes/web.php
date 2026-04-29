@@ -6,7 +6,7 @@ use App\Http\Controllers\PollController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PollController::class, 'welcome'])->name('welcome');
-Route::prefix('login')->group(function () {
+Route::middleware('guest')->prefix('login')->group(function () {
     Route::get('/', [AdminController::class, 'loginForm'])->name('login');
     Route::post('/', [AdminController::class, 'login'])->name('login.submit');
 });

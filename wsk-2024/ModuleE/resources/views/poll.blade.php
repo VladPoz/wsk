@@ -22,7 +22,7 @@
                     @foreach($answers as $answer)
                         @if($answer->question_id === $item->id)
                             <div>
-                                <input name="{{$answer->question_id}}" value="{{$answer->question_id}}" type="radio" required>
+                                <input name="{{$answer->question_id}}" value="{{$answer->id}}" type="radio" required>
                                 <label>{{$answer->answer}}</label>
                             </div>
                         @endif
@@ -34,7 +34,7 @@
                     @foreach($answers as $answer)
                         @if($answer->question_id === $item->id)
                             <div>
-                                <input name="{{$answer->question_id}}[]" value="{{$answer->question_id}}" type="checkbox">
+                                <input name="{{$answer->question_id}}[]" value="{{$answer->id}}" type="checkbox">
                                 <label>{{$answer->answer}}</label>
                             </div>
                         @endif

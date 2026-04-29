@@ -26,7 +26,22 @@ class PollController extends Controller
     }
     public function submit($slug, Request $request){
         $poll = Poll::query()->where('slug', $slug)->firstOrFail();
-        dd($request->all());
+//        dd($request->all());
+        foreach($request->all() as $key => $value){
+            if($key == '_token'){
+                continue;
+            }
+            if (is_array($value)){
+                foreach($value as $item){
+                    $answerCount = Answer::query()->where('id', $item)->value('count');
+                    Answer::query()->where('id', $item)->update(['count' => $answerCount+1]);
+                }
+            }else{
+                $answerCount = Answer::query()->where('id', $value)->value('count');;
+                Answer::query()->where('id', $value)->update(['count' => $answerCount+1]);
+            }
+        }
+        return redirect()->route('welcome');
     }
 
     public function index(){

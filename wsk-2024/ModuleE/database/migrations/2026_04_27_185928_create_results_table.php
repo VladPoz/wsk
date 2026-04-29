@@ -22,7 +22,6 @@ return new class extends Migration
             $table->foreignId('answer_id')->constrained('answers')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
-            $table->integer('count')->default(0);
         });
     }
 

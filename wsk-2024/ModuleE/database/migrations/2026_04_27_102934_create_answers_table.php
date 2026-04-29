@@ -17,6 +17,7 @@ return new class extends Migration
             ->onUpdate('cascade')
             ->onDelete('cascade');
             $table->string('answer', 255);
+            $table->integer('count')->default(0);
         });
     }
 

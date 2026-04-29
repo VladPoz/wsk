@@ -20,7 +20,7 @@
         <input type="text" placeholder="title" name="title" value="{{old('title')}}">
         <input type="text" placeholder="description" name="description" value="{{old('description')}}">
         @if($errors->any())
-            <p>{{$errors->first()}}</p>
+            <p class="err">{{$errors->first()}}</p>
         @endif
         <button type="submit">Create</button>
     </form>

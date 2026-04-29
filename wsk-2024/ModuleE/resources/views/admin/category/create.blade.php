@@ -14,7 +14,7 @@
         @csrf
         <input type="text" placeholder="name" name="name" value="{{old('name')}}">
         @if($errors->any())
-            <p>{{$errors->first()}}</p>
+            <p class="err">{{$errors->first()}}</p>
         @endif
         <button type="submit">Create</button>
     </form>
