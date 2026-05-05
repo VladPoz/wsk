@@ -1,0 +1,1340 @@
+openapi: 3.0.3
+info:
+  title: 'Eventify API Documentation'
+  description: 'RESTful API for managing technical events, participants, and registrations.'
+  version: 1.0.0
+servers:
+  -
+    url: 'http://localhost'
+tags:
+  -
+    name: Additional
+    description: ''
+  -
+    name: Authentication
+    description: ''
+  -
+    name: Events
+    description: ''
+  -
+    name: Participants
+    description: ''
+  -
+    name: Registrations
+    description: ''
+components:
+  securitySchemes:
+    default:
+      type: http
+      scheme: bearer
+      description: 'Token must be a string longer than 32 characters.'
+security:
+  -
+    default: []
+paths:
+
+  # ─── AUTHENTICATION ───────────────────────────────────────────────────────────
+
+  /api/v1/auth/register:
+    post:
+      summary: Register
+      operationId: register
+      description: 'Registers the user and returns an access token. Token must be generated securely and be longer than 32 characters.'
+      parameters: []
+      tags:
+        - Authentication
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+                - password_confirmation
+              properties:
+                username:
+                  type: string
+                  description: 'Must be unique. Must be at least 3 characters.'
+                  example: johndoe
+                password:
+                  type: string
+                  description: 'Must be at least 6 characters.'
+                  example: secret123
+                password_confirmation:
+                  type: string
+                  description: 'Must match the password field.'
+                  example: secret123
+      responses:
+        201:
+          description: 'Registration successful'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: 'Bearer token, longer than 32 characters.'
+                    example: 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5'
+                  role:
+                    type: string
+                    example: USER
+        422:
+          description: 'Invalid data'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Invalid data'
+
+  /api/v1/auth/login:
+    post:
+      summary: Login
+      operationId: login
+      description: 'Authenticates the user and returns an access token.'
+      parameters: []
+      tags:
+        - Authentication
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                  example: admin
+                password:
+                  type: string
+                  example: admin123
+      responses:
+        200:
+          description: 'Login successful'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: 'Bearer token, longer than 32 characters.'
+                    example: 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5'
+                  role:
+                    type: string
+                    enum: [ADMIN, USER]
+                    example: ADMIN
+        422:
+          description: 'Invalid login'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Invalid login'
+
+  /api/v1/auth/logout:
+    post:
+      summary: Logout
+      operationId: logout
+      description: 'Invalidates the current user token. Accessible only for authenticated users.'
+      parameters: []
+      tags:
+        - Authentication
+      responses:
+        200:
+          description: 'Logout successful'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'logout success'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Unauthorized user'
+
+  # ─── EVENTS ───────────────────────────────────────────────────────────────────
+
+  /api/v1/events:
+    get:
+      summary: 'List Events'
+      operationId: listEvents
+      description: 'Returns a paginated list of events. Supports optional filtering by date and search by title or location.'
+      tags:
+        - Events
+      parameters:
+        -
+          in: query
+          name: page
+          description: 'Page number (default: 1).'
+          required: false
+          schema:
+            type: integer
+            example: 1
+        -
+          in: query
+          name: date
+          description: 'Filter by event_date (YYYY-MM-DD).'
+          required: false
+          schema:
+            type: string
+            example: '2026-05-01'
+        -
+          in: query
+          name: search
+          description: 'Search substring in title or location.'
+          required: false
+          schema:
+            type: string
+            example: Almaty
+      responses:
+        200:
+          description: 'Paginated list of events'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        title:
+                          type: string
+                          example: string
+                        description:
+                          type: string
+                          example: string
+                        location:
+                          type: string
+                          example: string
+                        event_date:
+                          type: string
+                          example: '2026-05-01'
+                        capacity:
+                          type: integer
+                          example: 100
+                        registrations_count:
+                          type: integer
+                          description: 'Reflects only CONFIRMED registrations.'
+                          example: 10
+                  meta:
+                    type: object
+                    properties:
+                      current_page:
+                        type: integer
+                        example: 1
+                      last_page:
+                        type: integer
+                        example: 1
+                      per_page:
+                        type: integer
+                        example: 10
+                      total:
+                        type: integer
+                        example: 1
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Unauthorized user'
+
+    post:
+      summary: 'Create Event (ADMIN)'
+      operationId: createEvent
+      description: 'Creates a new event. Accessible only for ADMIN users.'
+      tags:
+        - Events
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - description
+                - location
+                - event_date
+                - capacity
+              properties:
+                title:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: 'Tech Conference 2026'
+                description:
+                  type: string
+                  example: 'Annual technology conference.'
+                location:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: Almaty
+                event_date:
+                  type: string
+                  description: 'Format: YYYY-MM-DD. Must be >= today and <= today + 1 year.'
+                  example: '2026-06-15'
+                capacity:
+                  type: integer
+                  description: 'Must be at least 1.'
+                  example: 100
+      responses:
+        201:
+          description: 'Event created successfully'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'create success'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      title:
+                        type: string
+                        example: 'Tech Conference 2026'
+                      event_date:
+                        type: string
+                        example: '2026-06-15'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Unauthorized user'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        422:
+          description: 'Validation error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Validation error'
+                  errors:
+                    type: object
+                    properties:
+                      title:
+                        type: array
+                        items:
+                          type: string
+                        example: ['The title field is required.']
+                      description:
+                        type: array
+                        items:
+                          type: string
+                        example: ['The description field is required.']
+                      location:
+                        type: array
+                        items:
+                          type: string
+                        example: ['The location field is required.']
+                      event_date:
+                        type: array
+                        items:
+                          type: string
+                        example: ['The event date field is required.']
+                      capacity:
+                        type: array
+                        items:
+                          type: string
+                        example: ['The capacity field is required.']
+
+  '/api/v1/events/{id}':
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the event.'
+        required: true
+        schema:
+          type: integer
+          example: 1
+
+    get:
+      summary: 'Event Details'
+      operationId: eventDetails
+      description: 'Returns detailed information about an event including its confirmed participants.'
+      tags:
+        - Events
+      responses:
+        200:
+          description: 'Event details'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      title:
+                        type: string
+                        example: string
+                      description:
+                        type: string
+                        example: string
+                      location:
+                        type: string
+                        example: string
+                      event_date:
+                        type: string
+                        example: '2026-06-15'
+                      capacity:
+                        type: integer
+                        example: 100
+                      registrations_count:
+                        type: integer
+                        description: 'Reflects only CONFIRMED registrations.'
+                        example: 10
+                      participants:
+                        type: array
+                        description: 'Only participants with CONFIRMED registrations for this event.'
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                            name:
+                              type: string
+                              example: string
+                            phone:
+                              type: string
+                              example: '+77001234567'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Unauthorized user'
+        404:
+          description: 'Not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Not found'
+
+    put:
+      summary: 'Update Event (ADMIN)'
+      operationId: updateEvent
+      description: 'Fully updates an existing event. All fields are required. Accessible only for ADMIN. If the capacity is less than the number of confirmed registrations, returns 409.'
+      tags:
+        - Events
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - description
+                - location
+                - event_date
+                - capacity
+              properties:
+                title:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: 'Tech Conference 2026 Updated'
+                description:
+                  type: string
+                  example: 'Updated description.'
+                location:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: Almaty
+                event_date:
+                  type: string
+                  description: 'Format: YYYY-MM-DD. Must be >= today and <= today + 1 year.'
+                  example: '2026-07-20'
+                capacity:
+                  type: integer
+                  description: 'Must be at least 1.'
+                  example: 150
+      responses:
+        200:
+          description: 'Event updated successfully'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'update success'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      title:
+                        type: string
+                        example: string
+                      description:
+                        type: string
+                        example: string
+                      location:
+                        type: string
+                        example: string
+                      event_date:
+                        type: string
+                        example: '2026-07-20'
+                      capacity:
+                        type: integer
+                        example: 150
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Unauthorized user'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        404:
+          description: 'Not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Not found'
+        409:
+          description: 'Conflict — capacity less than confirmed registrations count'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'The capacity must be greater than number of confirmed registrations'
+        422:
+          description: 'Validation error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Validation error'
+                  errors:
+                    type: object
+                    properties:
+                      event_date:
+                        type: array
+                        items:
+                          type: string
+                        example: ['The event date does not match the format Y-m-d.']
+
+    delete:
+      summary: 'Delete Event (ADMIN)'
+      operationId: deleteEvent
+      description: 'Deletes an event and all related registrations. Accessible only for ADMIN.'
+      tags:
+        - Events
+      responses:
+        200:
+          description: 'Event deleted successfully'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'delete success'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Unauthorized user'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        404:
+          description: 'Not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Not found'
+
+  # ─── PARTICIPANTS ─────────────────────────────────────────────────────────────
+
+  /api/v1/my-participant:
+    get:
+      summary: 'My Participant'
+      operationId: myParticipant
+      description: 'Returns the participant profile belonging to the authenticated user. Returns 404 if the user has not created a profile yet.'
+      tags:
+        - Participants
+      responses:
+        200:
+          description: 'Participant profile'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: string
+                      phone:
+                        type: string
+                        example: '+77001234567'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Unauthorized user'
+        404:
+          description: 'Profile not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Not found'
+
+  /api/v1/participants:
+    post:
+      summary: 'Create Participant'
+      operationId: createParticipant
+      description: 'Creates a participant profile for the authenticated user. Returns 409 if a profile already exists.'
+      tags:
+        - Participants
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - phone
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: 'John Doe'
+                phone:
+                  type: string
+                  description: 'Must not be greater than 20 characters.'
+                  example: '+77001234567'
+      responses:
+        201:
+          description: 'Participant created successfully'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'create success'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: 'John Doe'
+                      phone:
+                        type: string
+                        example: '+77001234567'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Unauthorized user'
+        409:
+          description: 'Conflict — participant profile already exists for this user'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Conflict
+        422:
+          description: 'Validation error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Validation error'
+                  errors:
+                    type: object
+                    properties:
+                      name:
+                        type: array
+                        items:
+                          type: string
+                        example: ['The name field is required.']
+                      phone:
+                        type: array
+                        items:
+                          type: string
+                        example: ['The phone field is required.']
+
+  '/api/v1/participants/{id}':
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the participant.'
+        required: true
+        schema:
+          type: integer
+          example: 1
+
+    put:
+      summary: 'Update Participant'
+      operationId: updateParticipant
+      description: 'Fully updates the participant profile. A user can only update their own profile — returns 403 for others.'
+      tags:
+        - Participants
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - phone
+              properties:
+                name:
+                  type: string
+                  description: 'Must not be greater than 255 characters.'
+                  example: 'John Doe Updated'
+                phone:
+                  type: string
+                  description: 'Must not be greater than 20 characters.'
+                  example: '+77009876543'
+      responses:
+        200:
+          description: 'Participant updated successfully'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'update success'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: string
+                      phone:
+                        type: string
+                        example: string
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Unauthorized user'
+        403:
+          description: 'Forbidden — user can only update their own profile'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        404:
+          description: 'Not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Not found'
+        422:
+          description: 'Validation error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Validation error'
+                  errors:
+                    type: object
+                    properties:
+                      name:
+                        type: array
+                        items:
+                          type: string
+                        example: ['The name field is required.']
+                      phone:
+                        type: array
+                        items:
+                          type: string
+                        example: ['The phone field is required.']
+
+    delete:
+      summary: 'Delete Participant'
+      operationId: deleteParticipant
+      description: 'Deletes the participant profile. A user can only delete their own profile. Returns 409 if the participant has any non-cancelled registrations.'
+      tags:
+        - Participants
+      responses:
+        200:
+          description: 'Participant deleted successfully'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'delete success'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Unauthorized user'
+        403:
+          description: 'Forbidden — user can only delete their own profile'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        404:
+          description: 'Not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Not found'
+        409:
+          description: 'Conflict — participant has active (non-cancelled) registrations'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Conflict
+
+  # ─── REGISTRATIONS ────────────────────────────────────────────────────────────
+
+  /api/v1/registrations:
+    post:
+      summary: 'Create Registration'
+      operationId: createRegistration
+      description: 'Creates a new registration for an event. Default status is PENDING. participant_id is determined automatically from the authenticated user profile.'
+      tags:
+        - Registrations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - event_id
+              properties:
+                event_id:
+                  type: integer
+                  description: 'Must exist in the events table.'
+                  example: 1
+      responses:
+        201:
+          description: 'Registration created successfully'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'create success'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      status:
+                        type: string
+                        example: PENDING
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Unauthorized user'
+        409:
+          description: 'Conflict — participant already registered for this event (regardless of status)'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Conflict
+        422:
+          description: 'Validation error — also returned when participant profile does not exist'
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Standard validation error'
+                    type: object
+                    example:
+                      message: 'Validation error'
+                      errors:
+                        event_id: ['The event id field is required.']
+                    properties:
+                      message:
+                        type: string
+                        example: 'Validation error'
+                      errors:
+                        type: object
+                        properties:
+                          event_id:
+                            type: array
+                            items:
+                              type: string
+                            example: ['The event id field is required.']
+                  -
+                    description: 'No participant profile'
+                    type: object
+                    example:
+                      message: 'Create a participant profile'
+                    properties:
+                      message:
+                        type: string
+                        example: 'Create a participant profile'
+
+  '/api/v1/registrations/{id}/confirm':
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the registration.'
+        required: true
+        schema:
+          type: integer
+          example: 1
+    patch:
+      summary: 'Confirm Registration (ADMIN)'
+      operationId: confirmRegistration
+      description: 'Confirms a registration. Only ADMIN can confirm. Only PENDING registrations can be confirmed. Returns 409 if event capacity is exceeded.'
+      tags:
+        - Registrations
+      responses:
+        200:
+          description: 'Registration confirmed'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'confirm success'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      status:
+                        type: string
+                        example: CONFIRMED
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Unauthorized user'
+        403:
+          description: 'Forbidden — only ADMIN can confirm registrations'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        404:
+          description: 'Not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Not found'
+        409:
+          description: 'Conflict — event capacity exceeded or registration not in PENDING status'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Conflict
+
+  '/api/v1/registrations/{id}/cancel':
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the registration.'
+        required: true
+        schema:
+          type: integer
+          example: 1
+    patch:
+      summary: 'Cancel Registration'
+      operationId: cancelRegistration
+      description: 'Cancels a registration. USER can cancel only their own registration. ADMIN can cancel any registration. Only PENDING or CONFIRMED registrations can be cancelled.'
+      tags:
+        - Registrations
+      responses:
+        200:
+          description: 'Registration cancelled'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'cancel success'
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      status:
+                        type: string
+                        example: CANCELLED
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Unauthorized user'
+        403:
+          description: 'Forbidden — USER attempting to cancel another user registration'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Forbidden
+        404:
+          description: 'Not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Not found'
+        409:
+          description: 'Conflict — registration is already CANCELLED'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Conflict
+
+  /api/v1/my-registrations:
+    get:
+      summary: 'My Registrations'
+      operationId: myRegistrations
+      description: 'Returns registrations of the authenticated user only.'
+      tags:
+        - Registrations
+      responses:
+        200:
+          description: 'List of user registrations'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        event:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 1
+                            title:
+                              type: string
+                              example: string
+                            event_date:
+                              type: string
+                              example: '2026-06-15'
+                        status:
+                          type: string
+                          enum: [PENDING, CONFIRMED, CANCELLED]
+                          example: PENDING
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Unauthorized user'
+
+  # ─── ADDITIONAL ───────────────────────────────────────────────────────────────
+
+  '/api/v1/events/{id}/my-status':
+    parameters:
+      -
+        in: path
+        name: id
+        description: 'The ID of the event.'
+        required: true
+        schema:
+          type: integer
+          example: 1
+    get:
+      summary: 'My Status'
+      operationId: myStatus
+      description: 'Returns the authenticated user registration status for a specific event. Returns null in the data field if the user is not registered.'
+      tags:
+        - Additional
+      responses:
+        200:
+          description: 'Registration status for the event'
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'User is registered'
+                    type: object
+                    example:
+                      data:
+                        event_id: 1
+                        status: CONFIRMED
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          event_id:
+                            type: integer
+                            example: 1
+                          status:
+                            type: string
+                            enum: [PENDING, CONFIRMED, CANCELLED]
+                            example: CONFIRMED
+                  -
+                    description: 'User is not registered for this event'
+                    type: object
+                    example:
+                      data: null
+                    properties:
+                      data:
+                        nullable: true
+                        example: null
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Unauthorized user'
+        404:
+          description: 'Event not found'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Not found'

@@ -1,0 +1,125 @@
+*{
+    padding: 0;
+    margin: 0;
+    border: none;
+    font-family: "Noto Sans";
+}
+body{
+    background-color: #fafafa;
+}
+header{
+    position: sticky;
+    top: 0;
+    left: 0;
+    border-bottom: 1px solid #1c1c2b;
+    width: 100vw;
+}
+a{
+    color: #1c1c2b;
+    text-decoration: none;
+}
+.container{
+    width: 60%;
+    margin-inline: auto;
+}
+.header__content{
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.header__content nav{
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+.form{
+    margin-top: 50vh;
+    margin-left: 50vw;
+    transform: translateX(-50%) translateY(-50%);
+    width: 20vw;
+    padding-block: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 5px 5px 20px #00000077;
+}
+.form div{
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+ }
+input{
+    padding: 12px 20px;
+    border-radius: 3px;
+    background-color: #efefef;
+    outline: none;
+}
+button{
+    padding: 12px 20px;
+    border-radius: 3px;
+    font-weight: 500;
+    background-color: #dfdfff;
+}
+.logout{
+    padding: 0;
+    background-color: transparent;
+}
+.err{
+    color: #FF7777;
+}
+.update{
+    color: #7777ff;
+}
+.dashboard__info{
+    margin-top: 24px;
+    width: 35%;
+    padding: 24px;
+    background-color: #efefef;
+    border-radius: 3px;
+}
+.grid{
+    margin-top: 24px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+.grid ul{
+    padding: 24px;
+    background-color: #efefef;
+    border-radius: 3px;
+    box-shadow: 3px 3px 5px #00000050;
+}
+.grid ul li{
+    list-style: none;
+}
+.grid ul div{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.create__link{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 24px;
+}
+.result{
+    text-align: center;
+    margin-top: 24px;
+    font-weight: 600;
+}
+.search{
+    width: calc(100% - 40px);
+    margin-top: 24px;
+    border-radius: 8px;
+}
+ol{
+    margin-left: 16px;
+}

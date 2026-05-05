@@ -1,0 +1,827 @@
+{
+  "variable": [
+    {
+      "id": "baseUrl",
+      "key": "baseUrl",
+      "type": "string",
+      "name": "string",
+      "value": "http://localhost"
+    }
+  ],
+  "info": {
+    "name": "Eventify API Documentation",
+    "_postman_id": "7e145fd8-c63c-4e4a-8735-920fc70f8490",
+    "description": "RESTful API for managing technical events, participants, and registrations.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "Authorization",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "description": "Registration, login and logout endpoints. Login and Register do not require authentication.",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/auth/register",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/auth/register"
+            },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\":\"johndoe\",\"password\":\"secret123\",\"password_confirmation\":\"secret123\"}"
+            },
+            "description": "Registers the user and returns an access token. Requires password_confirmation.",
+            "auth": { "type": "noauth" }
+          },
+          "response": [
+            {
+              "name": "Success 201",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 201,
+              "body": "{\n  \"token\": \"a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5\",\n  \"role\": \"USER\"\n}"
+            },
+            {
+              "name": "Invalid data 422",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 422,
+              "body": "{\n  \"message\": \"Invalid data\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Login",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/auth/login",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/auth/login"
+            },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\":\"admin\",\"password\":\"admin123\"}"
+            },
+            "description": "Authenticates the user and returns an access token.",
+            "auth": { "type": "noauth" }
+          },
+          "response": [
+            {
+              "name": "Success 200",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 200,
+              "body": "{\n  \"token\": \"a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5\",\n  \"role\": \"ADMIN\"\n}"
+            },
+            {
+              "name": "Invalid login 422",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 422,
+              "body": "{\n  \"message\": \"Invalid login\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/auth/logout",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/auth/logout"
+            },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": null,
+            "description": "Invalidates the current user token. Requires Bearer token."
+          },
+          "response": [
+            {
+              "name": "Success 200",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 200,
+              "body": "{\n  \"message\": \"logout success\"\n}"
+            },
+            {
+              "name": "Unauthorized 401",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 401,
+              "body": "{\n  \"message\": \"Unauthorized user\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Events",
+      "description": "Event management endpoints.",
+      "item": [
+        {
+          "name": "List Events",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/events",
+              "query": [
+                { "key": "page",   "value": "1",          "description": "Page number (default: 1).", "disabled": false },
+                { "key": "date",   "value": "2026-05-01", "description": "Filter by event_date (YYYY-MM-DD).", "disabled": false },
+                { "key": "search", "value": "Almaty",     "description": "Search substring in title or location.", "disabled": false }
+              ],
+              "raw": "{{baseUrl}}/api/v1/events?page=1&date=2026-05-01&search=Almaty"
+            },
+            "method": "GET",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": null,
+            "description": "Returns a paginated list of events. registrations_count reflects only CONFIRMED registrations."
+          },
+          "response": [
+            {
+              "name": "Success 200",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 200,
+              "body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"title\": \"string\",\n      \"description\": \"string\",\n      \"location\": \"string\",\n      \"event_date\": \"2026-05-01\",\n      \"capacity\": 100,\n      \"registrations_count\": 10\n    }\n  ],\n  \"meta\": {\n    \"current_page\": 1,\n    \"last_page\": 1,\n    \"per_page\": 10,\n    \"total\": 1\n  }\n}"
+            },
+            {
+              "name": "Unauthorized 401",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 401,
+              "body": "{\n  \"message\": \"Unauthorized user\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create Event (ADMIN)",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/events",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/events"
+            },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"title\":\"Tech Conference 2026\",\"description\":\"Annual technology conference.\",\"location\":\"Almaty\",\"event_date\":\"2026-06-15\",\"capacity\":100}"
+            },
+            "description": "Creates a new event. Accessible only for ADMIN users."
+          },
+          "response": [
+            {
+              "name": "Success 201",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 201,
+              "body": "{\n  \"message\": \"create success\",\n  \"data\": {\n    \"id\": 1,\n    \"title\": \"Tech Conference 2026\",\n    \"event_date\": \"2026-06-15\"\n  }\n}"
+            },
+            {
+              "name": "Unauthorized 401",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 401,
+              "body": "{\n  \"message\": \"Unauthorized user\"\n}"
+            },
+            {
+              "name": "Forbidden 403",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 403,
+              "body": "{\n  \"message\": \"Forbidden\"\n}"
+            },
+            {
+              "name": "Validation error 422",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 422,
+              "body": "{\n  \"message\": \"Validation error\",\n  \"errors\": {\n    \"title\": [\"The title field is required.\"],\n    \"description\": [\"The description field is required.\"],\n    \"location\": [\"The location field is required.\"],\n    \"event_date\": [\"The event date field is required.\"],\n    \"capacity\": [\"The capacity field is required.\"]\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Event Details",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/events/:id",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/events/:id",
+              "variable": [
+                { "id": "id", "key": "id", "value": "1", "description": "The ID of the event." }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": null,
+            "description": "Returns detailed information about an event. participants includes only those with CONFIRMED registrations. Participant fields: id, name, phone."
+          },
+          "response": [
+            {
+              "name": "Success 200",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 200,
+              "body": "{\n  \"data\": {\n    \"id\": 1,\n    \"title\": \"string\",\n    \"description\": \"string\",\n    \"location\": \"string\",\n    \"event_date\": \"2026-06-15\",\n    \"capacity\": 100,\n    \"registrations_count\": 10,\n    \"participants\": [\n      { \"id\": 1, \"name\": \"string\", \"phone\": \"+77001234567\" }\n    ]\n  }\n}"
+            },
+            {
+              "name": "Unauthorized 401",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 401,
+              "body": "{\n  \"message\": \"Unauthorized user\"\n}"
+            },
+            {
+              "name": "Not found 404",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 404,
+              "body": "{\n  \"message\": \"Not found\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Event (ADMIN)",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/events/:id",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/events/:id",
+              "variable": [
+                { "id": "id", "key": "id", "value": "1", "description": "The ID of the event." }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"title\":\"Tech Conference 2026 Updated\",\"description\":\"Updated description.\",\"location\":\"Almaty\",\"event_date\":\"2026-07-20\",\"capacity\":150}"
+            },
+            "description": "Fully updates an event. Returns 409 if new capacity is less than confirmed registrations count."
+          },
+          "response": [
+            {
+              "name": "Success 200",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 200,
+              "body": "{\n  \"message\": \"update success\",\n  \"data\": {\n    \"id\": 1,\n    \"title\": \"string\",\n    \"description\": \"string\",\n    \"location\": \"string\",\n    \"event_date\": \"2026-07-20\",\n    \"capacity\": 150\n  }\n}"
+            },
+            {
+              "name": "Unauthorized 401",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 401,
+              "body": "{\n  \"message\": \"Unauthorized user\"\n}"
+            },
+            {
+              "name": "Forbidden 403",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 403,
+              "body": "{\n  \"message\": \"Forbidden\"\n}"
+            },
+            {
+              "name": "Not found 404",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 404,
+              "body": "{\n  \"message\": \"Not found\"\n}"
+            },
+            {
+              "name": "Conflict 409 — capacity too low",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 409,
+              "body": "{\n  \"message\": \"The capacity must be greater than number of confirmed registrations\"\n}"
+            },
+            {
+              "name": "Validation error 422",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 422,
+              "body": "{\n  \"message\": \"Validation error\",\n  \"errors\": {\n    \"event_date\": [\"The event date does not match the format Y-m-d.\"]\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete Event (ADMIN)",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/events/:id",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/events/:id",
+              "variable": [
+                { "id": "id", "key": "id", "value": "1", "description": "The ID of the event." }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": null,
+            "description": "Deletes an event and all related registrations. Accessible only for ADMIN."
+          },
+          "response": [
+            {
+              "name": "Success 200",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 200,
+              "body": "{\n  \"message\": \"delete success\"\n}"
+            },
+            {
+              "name": "Unauthorized 401",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 401,
+              "body": "{\n  \"message\": \"Unauthorized user\"\n}"
+            },
+            {
+              "name": "Forbidden 403",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 403,
+              "body": "{\n  \"message\": \"Forbidden\"\n}"
+            },
+            {
+              "name": "Not found 404",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 404,
+              "body": "{\n  \"message\": \"Not found\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Participants",
+      "description": "Participant profile management.",
+      "item": [
+        {
+          "name": "My Participant",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/my-participant",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/my-participant"
+            },
+            "method": "GET",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": null,
+            "description": "Returns the participant profile of the authenticated user. Returns 404 if no profile created yet."
+          },
+          "response": [
+            {
+              "name": "Success 200",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 200,
+              "body": "{\n  \"data\": {\n    \"id\": 1,\n    \"name\": \"string\",\n    \"phone\": \"+77001234567\"\n  }\n}"
+            },
+            {
+              "name": "Unauthorized 401",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 401,
+              "body": "{\n  \"message\": \"Unauthorized user\"\n}"
+            },
+            {
+              "name": "Not found 404",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 404,
+              "body": "{\n  \"message\": \"Not found\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Create Participant",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/participants",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/participants"
+            },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"John Doe\",\"phone\":\"+77001234567\"}"
+            },
+            "description": "Creates a participant profile for the authenticated user. Returns 409 if profile already exists."
+          },
+          "response": [
+            {
+              "name": "Success 201",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 201,
+              "body": "{\n  \"message\": \"create success\",\n  \"data\": {\n    \"id\": 1,\n    \"name\": \"John Doe\",\n    \"phone\": \"+77001234567\"\n  }\n}"
+            },
+            {
+              "name": "Unauthorized 401",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 401,
+              "body": "{\n  \"message\": \"Unauthorized user\"\n}"
+            },
+            {
+              "name": "Conflict 409 — profile already exists",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 409,
+              "body": "{\n  \"message\": \"Conflict\"\n}"
+            },
+            {
+              "name": "Validation error 422",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 422,
+              "body": "{\n  \"message\": \"Validation error\",\n  \"errors\": {\n    \"name\": [\"The name field is required.\"],\n    \"phone\": [\"The phone field is required.\"]\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Update Participant",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/participants/:id",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/participants/:id",
+              "variable": [
+                { "id": "id", "key": "id", "value": "1", "description": "The ID of the participant." }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"John Doe Updated\",\"phone\":\"+77009876543\"}"
+            },
+            "description": "Fully updates the participant profile. A user can only update their own profile. Returns 403 for others."
+          },
+          "response": [
+            {
+              "name": "Success 200",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 200,
+              "body": "{\n  \"message\": \"update success\",\n  \"data\": {\n    \"id\": 1,\n    \"name\": \"string\",\n    \"phone\": \"string\"\n  }\n}"
+            },
+            {
+              "name": "Unauthorized 401",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 401,
+              "body": "{\n  \"message\": \"Unauthorized user\"\n}"
+            },
+            {
+              "name": "Forbidden 403",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 403,
+              "body": "{\n  \"message\": \"Forbidden\"\n}"
+            },
+            {
+              "name": "Not found 404",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 404,
+              "body": "{\n  \"message\": \"Not found\"\n}"
+            },
+            {
+              "name": "Validation error 422",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 422,
+              "body": "{\n  \"message\": \"Validation error\",\n  \"errors\": {\n    \"name\": [\"The name field is required.\"],\n    \"phone\": [\"The phone field is required.\"]\n  }\n}"
+            }
+          ]
+        },
+        {
+          "name": "Delete Participant",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/participants/:id",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/participants/:id",
+              "variable": [
+                { "id": "id", "key": "id", "value": "1", "description": "The ID of the participant." }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": null,
+            "description": "Deletes the participant profile. Returns 409 if participant has any non-cancelled registrations."
+          },
+          "response": [
+            {
+              "name": "Success 200",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 200,
+              "body": "{\n  \"message\": \"delete success\"\n}"
+            },
+            {
+              "name": "Unauthorized 401",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 401,
+              "body": "{\n  \"message\": \"Unauthorized user\"\n}"
+            },
+            {
+              "name": "Forbidden 403",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 403,
+              "body": "{\n  \"message\": \"Forbidden\"\n}"
+            },
+            {
+              "name": "Not found 404",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 404,
+              "body": "{\n  \"message\": \"Not found\"\n}"
+            },
+            {
+              "name": "Conflict 409 — active registrations exist",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 409,
+              "body": "{\n  \"message\": \"Conflict\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Registrations",
+      "description": "Registration management. Statuses: PENDING | CONFIRMED | CANCELLED.",
+      "item": [
+        {
+          "name": "Create Registration",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/registrations",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/registrations"
+            },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"event_id\":1}"
+            },
+            "description": "Creates a new PENDING registration. participant_id is resolved from the authenticated user profile. Returns 422 with message 'Create a participant profile' if no profile exists."
+          },
+          "response": [
+            {
+              "name": "Success 201",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 201,
+              "body": "{\n  \"message\": \"create success\",\n  \"data\": {\n    \"id\": 1,\n    \"status\": \"PENDING\"\n  }\n}"
+            },
+            {
+              "name": "Unauthorized 401",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 401,
+              "body": "{\n  \"message\": \"Unauthorized user\"\n}"
+            },
+            {
+              "name": "Conflict 409 — already registered",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 409,
+              "body": "{\n  \"message\": \"Conflict\"\n}"
+            },
+            {
+              "name": "Validation error 422",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 422,
+              "body": "{\n  \"message\": \"Validation error\",\n  \"errors\": {\n    \"event_id\": [\"The event id field is required.\"]\n  }\n}"
+            },
+            {
+              "name": "No participant profile 422",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 422,
+              "body": "{\n  \"message\": \"Create a participant profile\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Confirm Registration (ADMIN)",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/registrations/:id/confirm",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/registrations/:id/confirm",
+              "variable": [
+                { "id": "id", "key": "id", "value": "1", "description": "The ID of the registration." }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": null,
+            "description": "Confirms a PENDING registration. Only ADMIN can confirm. Returns 409 if event capacity is exceeded."
+          },
+          "response": [
+            {
+              "name": "Success 200",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 200,
+              "body": "{\n  \"message\": \"confirm success\",\n  \"data\": {\n    \"id\": 1,\n    \"status\": \"CONFIRMED\"\n  }\n}"
+            },
+            {
+              "name": "Unauthorized 401",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 401,
+              "body": "{\n  \"message\": \"Unauthorized user\"\n}"
+            },
+            {
+              "name": "Forbidden 403 — only ADMIN",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 403,
+              "body": "{\n  \"message\": \"Forbidden\"\n}"
+            },
+            {
+              "name": "Not found 404",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 404,
+              "body": "{\n  \"message\": \"Not found\"\n}"
+            },
+            {
+              "name": "Conflict 409 — capacity exceeded or wrong status",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 409,
+              "body": "{\n  \"message\": \"Conflict\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Cancel Registration",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/registrations/:id/cancel",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/registrations/:id/cancel",
+              "variable": [
+                { "id": "id", "key": "id", "value": "1", "description": "The ID of the registration." }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": null,
+            "description": "Cancels a PENDING or CONFIRMED registration. USER can only cancel their own. ADMIN can cancel any."
+          },
+          "response": [
+            {
+              "name": "Success 200",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 200,
+              "body": "{\n  \"message\": \"cancel success\",\n  \"data\": {\n    \"id\": 1,\n    \"status\": \"CANCELLED\"\n  }\n}"
+            },
+            {
+              "name": "Unauthorized 401",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 401,
+              "body": "{\n  \"message\": \"Unauthorized user\"\n}"
+            },
+            {
+              "name": "Forbidden 403 — USER cancelling another user registration",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 403,
+              "body": "{\n  \"message\": \"Forbidden\"\n}"
+            },
+            {
+              "name": "Not found 404",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 404,
+              "body": "{\n  \"message\": \"Not found\"\n}"
+            },
+            {
+              "name": "Conflict 409 — already cancelled",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 409,
+              "body": "{\n  \"message\": \"Conflict\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "My Registrations",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/my-registrations",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/my-registrations"
+            },
+            "method": "GET",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": null,
+            "description": "Returns registrations of the authenticated user only."
+          },
+          "response": [
+            {
+              "name": "Success 200",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 200,
+              "body": "{\n  \"data\": [\n    {\n      \"id\": 1,\n      \"event\": {\n        \"id\": 1,\n        \"title\": \"string\",\n        \"event_date\": \"2026-06-15\"\n      },\n      \"status\": \"PENDING\"\n    }\n  ]\n}"
+            },
+            {
+              "name": "Unauthorized 401",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 401,
+              "body": "{\n  \"message\": \"Unauthorized user\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Additional",
+      "description": "Additional endpoints.",
+      "item": [
+        {
+          "name": "My Status",
+          "request": {
+            "url": {
+              "host": "{{baseUrl}}",
+              "path": "api/v1/events/:id/my-status",
+              "query": [],
+              "raw": "{{baseUrl}}/api/v1/events/:id/my-status",
+              "variable": [
+                { "id": "id", "key": "id", "value": "1", "description": "The ID of the event." }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": null,
+            "description": "Returns the authenticated user registration status for a specific event. Returns { \"data\": null } if not registered."
+          },
+          "response": [
+            {
+              "name": "Success 200 — registered",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 200,
+              "body": "{\n  \"data\": {\n    \"event_id\": 1,\n    \"status\": \"CONFIRMED\"\n  }\n}"
+            },
+            {
+              "name": "Success 200 — not registered",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 200,
+              "body": "{\n  \"data\": null\n}"
+            },
+            {
+              "name": "Unauthorized 401",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 401,
+              "body": "{\n  \"message\": \"Unauthorized user\"\n}"
+            },
+            {
+              "name": "Not found 404",
+              "header": [{ "key": "Content-Type", "value": "application/json" }],
+              "code": 404,
+              "body": "{\n  \"message\": \"Not found\"\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

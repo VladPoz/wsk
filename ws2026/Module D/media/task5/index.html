@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Countdown Timer</title>
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #111;
+      font-family: Arial, sans-serif;
+      color: #fff;
+    }
+
+    .timer-container {
+      text-align: center;
+    }
+
+    .time {
+      font-size: 80px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      background: #4caf50;
+      color: white;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+
+    button:hover {
+      background: #43a047;
+    }
+
+    button:disabled {
+      background: #777;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="timer-container">
+    <div class="time" id="time">3</div>
+    <button id="startBtn">Start</button>
+  </div>
+
+  <script>
+    let time = 10;
+
+    const timeEl = document.getElementById("time");
+    const startBtn = document.getElementById("startBtn");
+
+    // write your code here
+  </script>
+
+</body>
+
+</html>

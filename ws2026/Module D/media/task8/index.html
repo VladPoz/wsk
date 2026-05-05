@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Custom Modal</title>
+
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #111;
+    color: #fff;
+    height: 200vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  button {
+    padding: 12px 24px;
+    font-size: 16px;
+    background: #4caf50;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+  }
+
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal-overlay.active {
+    display: flex;
+  }
+
+  .modal {
+    background: #222;
+    padding: 20px 30px;
+    border-radius: 10px;
+    min-width: 300px;
+    text-align: center;
+    position: relative;
+  }
+
+  .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 18px;
+  }
+</style>
+</head>
+
+<body>
+
+<button id="openBtn">Open Modal</button>
+
+<div class="modal-overlay" id="overlay">
+  <div class="modal" id="modal">
+    <div class="close" id="closeBtn">✕</div>
+    <h2>Modal Window</h2>
+    <p>This is a custom modal</p>
+  </div>
+</div>
+
+<script>
+  // write your code here
+</script>
+
+</body>
+</html>

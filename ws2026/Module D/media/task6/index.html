@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Copy to Clipboard</title>
+
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #111;
+    font-family: Arial, sans-serif;
+    color: #fff;
+  }
+
+  .container {
+    text-align: center;
+  }
+
+  .text {
+    margin-bottom: 15px;
+    font-size: 18px;
+    background: #222;
+    padding: 10px 20px;
+    border-radius: 6px;
+  }
+
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    background: #2196f3;
+    color: white;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background 0.2s;
+  }
+
+  button:hover {
+    background: #1976d2;
+  }
+
+  .copied {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #4caf50;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .copied.show {
+    opacity: 1;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <div class="text" id="text">Hello, WorldSkills!</div>
+  <button id="copyBtn">Copy</button>
+  <div class="copied" id="copied">Copied!</div>
+</div>
+
+<script>
+  // write your code here
+</script>
+
+</body>
+</html>

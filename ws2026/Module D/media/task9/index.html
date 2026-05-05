@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Form Validation</title>
+
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #111;
+    font-family: Arial, sans-serif;
+    color: #fff;
+  }
+
+  .form {
+    background: #222;
+    padding: 25px;
+    border-radius: 10px;
+    width: 300px;
+  }
+
+  .form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .field {
+    margin-bottom: 15px;
+  }
+
+  input {
+    width: -webkit-fill-available;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #444;
+    background: #111;
+    color: #fff;
+  }
+
+  input.error {
+    border-color: #f44336;
+  }
+
+  .error-text {
+    font-size: 12px;
+    color: #f44336;
+    margin-top: 5px;
+  }
+
+  button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    background: #4caf50;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: #43a047;
+  }
+</style>
+</head>
+
+<body>
+
+<form class="form" id="form">
+  <h2>Register</h2>
+
+  <div class="field">
+    <input type="text" id="email" placeholder="Email">
+    <div class="error-text" id="emailError"></div>
+  </div>
+
+  <div class="field">
+    <input type="password" id="password" placeholder="Password">
+    <div class="error-text" id="passwordError"></div>
+  </div>
+
+  <div class="field">
+    <input type="password" id="confirm" placeholder="Confirm Password">
+    <div class="error-text" id="confirmError"></div>
+  </div>
+
+  <button type="submit">Submit</button>
+</form>
+
+<script>
+  // write your code here
+</script>
+
+</body>
+</html>
