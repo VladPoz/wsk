@@ -24,6 +24,7 @@ class AuthController extends Controller
         $user = User::query()->create([
             'username' => $data['username'],
             'password' => Hash::make($data['password']),
+            'role' => 'USER',
             'api_token' => $token,
         ]);
         return response()->json(["token" => $token, "role" => $user->role]);

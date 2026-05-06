@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('participant_id')->constrained('participants')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
-            $table->enum('status', ['CONFIRMED', 'PENDING', 'CANCELLED'])->default('pending');
+            $table->enum('status', ['CONFIRMED', 'PENDING', 'CANCELLED'])->default('PENDING');
             $table->timestamps();
         });
     }
