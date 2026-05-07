@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -10,16 +12,9 @@ use Illuminate\Support\Str;
 class AuthController extends Controller
 {
     //
-    public function register(Request $request){
-        try {
-            $data = $request->validate([
-                'username' => 'required|string|unique:users,username|min:3',
-                'password' => 'required|string|min:6|confirmed',
-                'password_confirmation' => 'required',
-            ]);
-        }catch (\Exception $exception){
-            return response()->json(['message' => "Invalid data"], 422);
-        }
+    public function register(RegisterRequest $request){
+        $data = $request->validated();
+
         $token = Str::random(64);
         $user = User::query()->create([
             'username' => $data['username'],
@@ -29,15 +24,8 @@ class AuthController extends Controller
         ]);
         return response()->json(["token" => $token, "role" => $user->role]);
     }
-    public function login(Request $request){
-        try {
-            $data = $request->validate([
-                'username' => 'string',
-                'password' => 'string',
-            ]);
-        }catch (\Exception $exception){
-            return response()->json(['message' => "Invalid login"], 422);
-        }
+    public function login(LoginRequest $request){
+        $data = $request->validated();
         $user = User::query()->where('username', $data['username'])->first();
         if(!$user || !Hash::check($data['password'], $user->password)){
             return response()->json(['message' => "Invalid login"], 422);

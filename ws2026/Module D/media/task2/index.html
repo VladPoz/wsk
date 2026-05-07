@@ -5,6 +5,38 @@
 <title>Toggle Switch</title>
 <style>
     /* write your styles here */
+    body{
+      background-color: #111;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .toggle{
+      position: absolute;
+      background-color: #545c56;
+      width: 140px;
+      height: 75px;
+      border-radius: 50px;
+      transition: .3s;
+    }
+    .circle{
+      position: relative;
+      left: 5px;
+      top: 50%;
+      width: 65px;
+      height: 65px;
+      background-color: #fff;
+      border-radius: 50px;
+      transform: translateY(-50%);
+      transition: .3s;
+    }
+    .active{
+      background-color: #4baf53;
+    }
+    .active .circle{
+      left: calc(100% - 70px);
+    }
 </style>
 </head>
 <body>
@@ -15,6 +47,14 @@
 
 <script>
     // write your js here
+    const toggle = document.getElementById('toggle');
+    toggle.addEventListener('click', () => {
+      if (toggle.classList.contains('active')) {
+        toggle.classList.remove('active');
+      }else{
+        toggle.classList.add('active');
+      }
+    })
 </script>
 
 </body>

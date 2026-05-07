@@ -51,7 +51,7 @@
 <body>
 
   <div class="timer-container">
-    <div class="time" id="time">3</div>
+    <div class="time" id="time">10</div>
     <button id="startBtn">Start</button>
   </div>
 
@@ -62,6 +62,22 @@
     const startBtn = document.getElementById("startBtn");
 
     // write your code here
+
+    startBtn.addEventListener("click", function() {
+      if(startBtn.disabled === false){
+        startBtn.disabled = true;
+        timeEl.textContent = time;
+        let timer = setInterval(function() {
+          time--;
+          timeEl.textContent = time;
+          if(time <= 0){
+            clearInterval(timer);
+            time = 10;
+            startBtn.disabled = false;
+          }
+        }, 1000)
+      }
+    })
   </script>
 
 </body>

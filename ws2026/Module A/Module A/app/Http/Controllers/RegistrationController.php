@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\Event;
 use App\Models\Participant;
 use App\Models\Registration;
@@ -10,11 +11,9 @@ use Illuminate\Http\Request;
 class RegistrationController extends Controller
 {
     //
-    public function create(Request $request)
+    public function create(RegisterRequest $request)
     {
-        $data = $request->validate([
-            'event_id' => 'required|integer|exists:events,id',
-        ]);
+        $data = $request->validated();
         $participant_id = Participant::query()->where('user_id', auth()->id())->first();
         if (!$participant_id) {
             return response()->json(['message' => 'Conflict'], 409);

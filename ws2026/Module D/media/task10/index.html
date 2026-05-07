@@ -3,14 +3,81 @@
 <head>
 <meta charset="UTF-8">
 <title>Web Component Counter</title>
+    <style>
+        body {
+            background:#111;
+            color:#fff;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            height:100vh;
+            font-family:Arial;
+        }
+        my-counter{
+            margin:10px;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            flex-direction: column;
+        }
+        button{
+            font-size:22px;
+            font-weight: 600;
+            padding:8px 24px;
+            color:#fff;
+            background:#222;
+            border:none;
+            border-radius:8px ;
+        }
+        button:hover{
+            background:#202020;
+        }
+        button:active{
+            background:#1a1a1a;
+        }
+    </style>
 </head>
 
-<body style="background:#111; color:#fff; display:flex; justify-content:center; align-items:center; height:100vh; font-family:Arial;">
+<body>
 
 <my-counter></my-counter>
 
 <script>
     // write your class here
+    class MyCounter extends HTMLElement {
+        constructor() {
+            super()
+
+            this.count = 0;
+
+            this.innerHTML = `
+            <h3 class="counter">0</h3>
+
+            <div>
+                <button class="minusBtn">-</button>
+                <button class="plusBtn">+</button>
+            </div>
+        `;
+        }
+
+        connectedCallback() {
+            const counter = this.querySelector('.counter');
+            const minusBtn = this.querySelector('.minusBtn');
+            const plusBtn = this.querySelector('.plusBtn');
+
+            minusBtn.addEventListener('click', () => {
+                this.count--;
+                counter.textContent = this.count;
+            });
+
+            plusBtn.addEventListener('click', () => {
+                this.count++;
+                counter.textContent = this.count;
+            });
+        }
+    }
+
+    customElements.define('my-counter', MyCounter);
 </script>
 
 </body>

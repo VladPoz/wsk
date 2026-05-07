@@ -67,6 +67,21 @@
 
 <script>
   // write your code here
+  const text = document.getElementById('text')
+  const copyBtn = document.getElementById('copyBtn')
+  const copied = document.getElementById('copied')
+
+  copyBtn.addEventListener('click', () => {
+    try{
+      navigator.clipboard.writeText(text.textContent);
+      copied.classList.add('show');
+      setTimeout(() => {
+        copied.classList.remove('show');
+      }, 1000)
+    }catch(e){
+      console.log(e)
+    }
+  })
 </script>
 
 </body>

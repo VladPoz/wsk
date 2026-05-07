@@ -72,6 +72,39 @@
 
 <script>
   // write your code here
+  const openBtn = document.getElementById('openBtn');
+  const closeBtn = document.getElementById('closeBtn');
+  const overlay = document.getElementById('overlay');
+
+  function openModal() {
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  openBtn.addEventListener('click', () => {
+    openModal();
+  })
+
+  closeBtn.addEventListener('click', () => {
+    closeModal();
+  })
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      closeModal();
+    }
+  });
+
+  overlay.addEventListener('click', (e) => {
+    if(e.target === overlay) {
+      closeModal();
+    }
+  })
 </script>
 
 </body>

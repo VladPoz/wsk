@@ -5,6 +5,37 @@
 <title>Shine Button</title>
 <style>
     /* write your styles here */
+    body{
+        background-color: #111;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+    }
+    .button{
+        transition: .6s;
+        position: relative;
+        background-color: #222;
+        font-size: 24px;
+        padding: 16px 48px;
+        color: #fff;
+        border: none;
+        overflow: hidden;
+    }
+    .button::before {
+        position: absolute;
+        content: '';
+        background-image: linear-gradient(-45deg, #00000000, #ffffffaa, #00000000);
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 50%;
+        transform: translateX(-150%) skew(-15deg);
+    }
+    .button:hover::before {
+        transition: transform .6s;
+        transform: translateX(250%) skew(-15deg);
+    }
 </style>
 </head>
 <body>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Participants\ParticipantsRequest;
 use App\Models\Participant;
 use App\Models\Registration;
 use Illuminate\Http\Request;
@@ -17,11 +18,8 @@ class ParticipantController extends Controller
         return response()->json($participants->only(['name', 'phone']),200);
     }
 
-    public function create(Request $request){
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
-        ]);
+    public function create(ParticipantsRequest $request){
+        $data = $request->validated();
         if(Participant::query()->where('user_id', auth()->id())->exists()){
             return response()->json(['message'=>'Conflict'], 409);
         }
@@ -33,11 +31,8 @@ class ParticipantController extends Controller
         return response()->json(['message' => 'create success' ,'data'=>$participants->only(['id', 'name', 'phone'])],201);
     }
 
-    public function update(Request $request, $id){
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
-        ]);
+    public function update(ParticipantsRequest $request, $id){
+        $data = $request->validated();
         $participant = Participant::query()->find($id);
         if(!$participant){
             return response()->json(['message'=>'Not found'], 404);

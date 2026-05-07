@@ -93,6 +93,48 @@
 
 <script>
   // write your code here
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const email = document.getElementById('email');
+  const emailError = document.getElementById('emailError');
+
+  const password = document.getElementById('password');
+  const passwordError = document.getElementById('passwordError');
+
+  const confirm = document.getElementById('confirm');
+  const confirmError = document.getElementById('confirmError');
+
+  const form = document.getElementById('form');
+
+  form.addEventListener('submit', (e) => {
+    let isValid = true;
+    if(!emailPattern.test(email.value)) {
+      email.classList.add('error');
+      emailError.textContent = 'password minimal 8 characters long';
+      isValid = false;
+    }else{
+      email.classList.remove('error');
+      emailError.textContent = '';
+    }
+    if(password.value.length <= 8) {
+      password.classList.add('error');
+      passwordError.textContent = 'password minimal 8 characters long';
+      isValid = false;
+    }else{
+      password.classList.remove('error');
+      passwordError.textContent = '';
+    }
+    if(confirm.value !== password.value) {
+      confirm.classList.add('error');
+      confirmError.textContent = 'password not confirmed';
+      isValid = false;
+    }else{
+      confirm.classList.remove('error');
+      confirmError.textContent = '';
+    }
+    if(!isValid) {
+      e.preventDefault();
+    }
+  })
 </script>
 
 </body>

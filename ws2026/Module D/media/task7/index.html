@@ -11,6 +11,16 @@
 <script>
     function NormalizePhoneNumber(arr) {
         // write your code here
+        return arr.map(item => {
+            let phone = item.replace(/\D/g,'');
+            if(phone[0] === '8'){
+                phone = '7' + phone.substring(1);
+            }
+            if(phone[0] !== '7' || phone.length !== 11){
+                return null;
+            }
+            return '+' + phone;
+        });
     }
 
     //example usage

@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Events\CreateRequest;
+use App\Http\Requests\Events\ListRequest;
+use App\Http\Requests\Events\UpdateRequest;
 use App\Models\Event;
 use App\Models\Participant;
 use App\Models\Registration;
@@ -11,12 +14,8 @@ use Illuminate\Support\Facades\Validator;
 class EventController extends Controller
 {
     //
-    public function list(Request $request){
-        $data = $request->validate([
-            'page' => 'integer|min:1',
-            'date' => 'date|date_format:Y-m-d',
-            'search' => 'string',
-        ]);
+    public function list(ListRequest $request){
+        $data = $request->validated();
         $events = Event::query()->withCount('registrations');
         if (isset($data['date'])) {
             $events->whereDate('event_date', $data['date']);
@@ -38,21 +37,9 @@ class EventController extends Controller
         ]], 200);
     }
 
-    public function create(Request $request){
-        $data = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'location' => 'required|string|max:255',
-            'event_date' => 'required|date|date_format:Y-m-d|after_or_equal:today|before_or_equal:' . now()->addYear()->format('Y-m-d'),
-            'capacity' => 'required|integer|min:1',
-        ]);
-        $event = Event::query()->create([
-            'title' => $data['title'],
-            'description' => $data['description'],
-            'location' => $data['location'],
-            'event_date' => $data['event_date'],
-            'capacity' => $data['capacity'],
-        ]);
+    public function create(CreateRequest $request){
+        $data = $request->validated();
+        $event = Event::query()->create($data);
         return response()->json(["message" => "create success", 'data' => [
             'id' => $event->id,
             'title' => $event->title,
@@ -69,14 +56,8 @@ class EventController extends Controller
         return response()->json($event, 200);
     }
 
-    public function update(Request $request, $id){
-        $data = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'location' => 'required|string|max:255',
-            'event_date' => 'required|date|date_format:Y-m-d|after_or_equal:today|before_or_equal:' . now()->addYear()->format('Y-m-d'),
-            'capacity' => 'required|integer|min:1',
-        ]);
+    public function update(UpdateRequest $request, $id){
+        $data = $request->validated();
         $event = Event::query()->with('registrations')->find($id);
         if(!$event){
             return response()->json(["message" => "Not found"], 404);
@@ -84,13 +65,7 @@ class EventController extends Controller
         if ($event->capacity < $event->registrations->where('status', 'CONFIRMED')->count()) {
             return response()->json(["message" => "The capacity must be greater than number of confirmed registrations"], 409);
         }
-        $event->update([
-            'title' => $data['title'],
-            'description' => $data['description'],
-            'location' => $data['location'],
-            'event_date' => $data['event_date'],
-            'capacity' => $data['capacity'],
-        ]);
+        $event->update($data);
         return response()->json(['message'=> 'update success', 'data' => $event], 200);
     }
 

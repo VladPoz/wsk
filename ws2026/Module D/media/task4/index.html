@@ -11,6 +11,19 @@
 <script>
     function FormatPrice(price) {
         // write your code here
+        let count = 0;
+        const newArr = [];
+        const arr = String(price).split('').reverse();
+        arr.forEach((item) => {
+            if (count === 3) {
+                count = 0;
+                newArr.unshift(' ');
+            }
+            newArr.unshift(item);
+            count++;
+        })
+        newArr.unshift('$');
+        return newArr.join('');
     }
 
     //example usage
