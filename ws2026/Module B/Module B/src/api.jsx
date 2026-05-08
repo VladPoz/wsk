@@ -11,14 +11,27 @@ export const api = {
     login: (data) => {
         return axios({
             method: 'POST',
-            url: '/login',
+            url: '/auth/login',
             data: data,
         })
     },
     register: (data) => {
         return axios({
             method: 'POST',
-            url: '/register',
+            url: '/auth/register',
+            data: data,
+        })
+    },
+    logout: () => {
+        return axios({
+            method: 'POST',
+            url: '/auth/logout',
+        })
+    },
+    getEventsList: (data) => {
+        return axios({
+            method: 'GET',
+            url: '/events',
             data: data,
         })
     },

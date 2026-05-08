@@ -1,5 +1,4 @@
-import {Link} from "react-router-dom";
-
+import {Link, useNavigate} from "react-router-dom";
 
 function Header() {
     return (
@@ -9,8 +8,8 @@ function Header() {
                     <Link to={'/'} className="header__title">Module B</Link>
                     {localStorage.getItem("token") ? (
                         <nav>
-                            <Link to={'/login'}>Login</Link>
-                            <Link to={'/register'}>Register</Link>
+                            <Link to={'/events'}>Events</Link>
+                            <Link to={'/profile'}>Profile</Link>
                         </nav>
                     ) : <nav>
                             <Link to={'/login'}>Login</Link>

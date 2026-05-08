@@ -109,7 +109,7 @@
     let isValid = true;
     if(!emailPattern.test(email.value)) {
       email.classList.add('error');
-      emailError.textContent = 'password minimal 8 characters long';
+      emailError.textContent = 'invalid email';
       isValid = false;
     }else{
       email.classList.remove('error');
