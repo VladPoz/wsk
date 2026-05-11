@@ -25,8 +25,8 @@ class ListRequest extends FormRequest
         return [
             //
             'page' => 'integer|min:1',
-            'date' => 'date|date_format:Y-m-d',
-            'search' => 'string',
+            'date' => 'nullable|date|date_format:Y-m-d',
+            'search' => 'nullable|string',
         ];
     }
 }

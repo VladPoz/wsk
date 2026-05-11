@@ -2,6 +2,7 @@ import Header from "../assets/Header.jsx";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {api} from "../api.jsx";
+import Loading from "../assets/loading.jsx";
 
 function Login() {
 
@@ -16,7 +17,7 @@ function Login() {
         api.login({username: username, password: password}).then((response) => {
             localStorage.setItem("token", response.data.token);
             localStorage.setItem('role', response.data.role);
-            navigate("/events");
+            navigate("/");
         }).catch((err) => {
             setError(err.response.data.message);
         })
@@ -33,14 +34,16 @@ function Login() {
     return (
         <>
             <Header/>
-            {loading ? (
-                <form className={'form'} onSubmit={handleSubmit}>
-                    <input type="text" placeholder="Username" onChange={(e)=>{setUsername(e.target.value)}} required={true} />
-                    <input type="password" placeholder="Password" name="password" onChange={(e)=>{setPassword(e.target.value)}} required={true}/>
-                    {error && <p>{error}</p>}
-                    <input className={'btn'} type="submit" value="Login" />
-                </form>
-            ) : null}
+            <div className="row justify-content-center align-items-center vh-100">
+                {loading ? (
+                    <form className={'col-2'} onSubmit={handleSubmit}>
+                        <input className={'form-control mb-3'} type="text" placeholder="Username" onChange={(e)=>{setUsername(e.target.value)}} required={true} />
+                        <input className={'form-control mb-3'} type="password" placeholder="Password" name="password" onChange={(e)=>{setPassword(e.target.value)}} required={true}/>
+                        {error && <p className={'text-danger mb-3'}>{error}</p>}
+                        <input className={'btn btn-dark w-100'} type="submit" value="Войти" />
+                    </form>
+                ) : <Loading/>}
+            </div>
         </>
     )
 }

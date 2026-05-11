@@ -15,7 +15,7 @@ class ParticipantController extends Controller
         if(!$participants){
             return response()->json(['message'=>'Not found'], 404);
         }
-        return response()->json($participants->only(['name', 'phone']),200);
+        return response()->json($participants->only(['id', 'name', 'phone']),200);
     }
 
     public function create(ParticipantsRequest $request){
@@ -52,7 +52,7 @@ class ParticipantController extends Controller
         if($participant->user_id !== auth()->id()){
             return response()->json(['message'=>'Forbidden'], 403);
         }
-        if(Registration::query()->where('participant_id', $participant->id)->exists()){
+        if(Registration::query()->where('participant_id', $participant->id)->where('status', 'CONFIRMED')->exists()){
             return response()->json(['message'=>'Conflict'], 409);
         }
         $participant->delete();

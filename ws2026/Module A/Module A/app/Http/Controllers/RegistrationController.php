@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Auth\RegisterRequest;
+use App\Http\Requests\Registrations\RegistrationsRequest;
 use App\Models\Event;
 use App\Models\Participant;
 use App\Models\Registration;
@@ -11,19 +11,22 @@ use Illuminate\Http\Request;
 class RegistrationController extends Controller
 {
     //
-    public function create(RegisterRequest $request)
+    public function create(RegistrationsRequest $request)
     {
         $data = $request->validated();
-        $participant_id = Participant::query()->where('user_id', auth()->id())->first();
-        if (!$participant_id) {
+        $participant = Participant::query()->where('user_id', auth()->id())->first();
+        if (!$participant) {
             return response()->json(['message' => 'Conflict'], 409);
         }
-        if (Registration::query()->where('event_id', $data['event_id'])->where('participant_id', $participant_id->id)->exists()) {
+        
+        $registration_check = Registration::query()->where('event_id', $data['event_id'])->where('participant_id', $participant->id)->latest('id')->first();
+        if ($registration_check && $registration_check->status !== 'CANCELLED') {
             return response()->json(['message' => 'Conflict'], 409);
         }
+        
         $registration = Registration::query()->create([
             'event_id' => $data['event_id'],
-            'participant_id' => $participant_id->id,
+            'participant_id' => $participant->id,
             'status' => 'PENDING',
         ]);
         return response()->json(['message' => 'create success', 'data' => $registration->only(['id', 'status'])], 201);
@@ -55,11 +58,11 @@ class RegistrationController extends Controller
         if (!$registration) {
             return response()->json(['message' => 'Not found'], 404);
         }
-        if ($registration->status == 'CANCELLED') {
-            return response()->json(['message' => 'Conflict'], 409);
-        }
-        if (!Participant::query()->where('user_id', auth()->id())->where('id', $registration->participant_id)->exists()) {
+        if (!Participant::query()->where('user_id', auth()->id())->where('id', $registration->participant_id)->first()) {
             return response()->json(['message' => 'Forbidden'], 403);
+        }
+        if ($registration->status === 'CANCELLED') {
+            return response()->json(['message' => 'Conflict'], 409);
         }
         $registration->update([
             'status' => 'CANCELLED',

@@ -29,11 +29,11 @@ class Event extends Model
     ];
 
     public function registrations(){
-        return $this->hasMany('App\Models\Registration', 'event_id', 'id');
+        return $this->hasMany('App\Models\Registration', 'event_id', 'id')->where('status', 'CONFIRMED');
     }
 
     public function participants(){
-        $registration = $this->hasMany('App\Models\Registration', 'event_id', 'id')->get('participant_id');
+        $registration = $this->hasMany('App\Models\Registration', 'event_id', 'id')->where('status', 'CONFIRMED')->get('participant_id');
         $mass = [];
         foreach($registration as $r){
             $mass[] = Participant::query()->find($r->participant_id)->only(['id', 'name', 'phone']);

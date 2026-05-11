@@ -87,7 +87,7 @@ class EventController extends Controller
 
         $isRegistered = Registration::query()->where('event_id', $id)->where('participant_id', function ($query) {
                 $query->select('id')->from('participants')->where('user_id', auth()->id())->first();
-        })->exists();
+        })->latest('id')->first();
 
         if (!$isRegistered) {
             return response()->json(["data" => null], 200);
@@ -96,7 +96,8 @@ class EventController extends Controller
         return response()->json([
             'data' => [
                 'id' => $event->id,
-                'status' => Registration::query()->where('event_id', $id)->first()->status,
+                'register_id' => $isRegistered->id,
+                'status' => $isRegistered->status,
             ]
         ], 200);
     }
