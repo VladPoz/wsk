@@ -29,11 +29,13 @@
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
                     <div class="card p-3 shadow h-100 text-decoration-none d-flex flex-column">
                         <img class="mb-3 rounded-2" height="200px" src="http://127.0.0.1:8000/storage/{{$item->image}}" alt="img">
-                        <p class="fs-5 mb-1">{{$item->title}}</p>
-                        <p class="fs-5 mb-1">Категория: {{$item->category->name}}</p>
-                        <p class="fs-5 mb-1">Автор: {{$item->author}}</p>
-                        <p class="fs-5 mb-1">Дата публикации: {{$item->created_at}}</p>
-                        <p class="fs-5 mb-1">Просмотров: {{$item->views}}</p>
+                        <p class="fs-5">{{$item->title}}</p>
+                        <div class="my-auto d-flex flex-column gap-0">
+                            <p>Категория: {{$item->category->name}}</p>
+                            <p>Автор: {{$item->author}}</p>
+                            <p>Дата публикации: {{$item->created_at}}</p>
+                            <p>Просмотров: {{$item->views}}</p>
+                        </div>
                         <div class="mb-0 row mt-auto">
                             <div class="col-9">
                                 <a class="btn btn-dark w-100" href="{{route('admin.news.edit', $item->id)}}">Редактировать</a>

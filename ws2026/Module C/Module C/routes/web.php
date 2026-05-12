@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [NewsController::class, 'welcomePage'])->name('welcome');
 Route::get('/news/{id}', [NewsController::class, 'newsPage'])->name('news');
+Route::post('/news/{id}/comment', [CommentController::class, 'CommentStore'])->name('comment.store');
 
 Route::prefix('login')->middleware('guest')->group(function () {
     Route::get('/', [AuthController::class, 'showLoginForm'])->name('login');
@@ -17,6 +18,7 @@ Route::prefix('login')->middleware('guest')->group(function () {
 
 Route::prefix('admin')->middleware(['auth', 'adm'])->group(function () {
     Route::get('/', [DashboardController::class, 'dashboardPage'])->name('admin.dashboard');
+    Route::post('/', [DashboardController::class, 'getNewsCount'])->name('admin.dashboard.count');
     Route::get('/news', [NewsController::class, 'adminAllNews'])->name('admin.allNews');
     Route::get('/news/create', [NewsController::class, 'adminNewsCreate'])->name('admin.news.create');
     Route::post('/news/create', [NewsController::class, 'adminNewsStore'])->name('admin.news.store');

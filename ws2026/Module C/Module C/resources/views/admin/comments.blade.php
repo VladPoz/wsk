@@ -24,18 +24,20 @@
                             <td>{{$comment->author}}</td>
                             <td><a class="link-dark" href="{{route('news', $comment->news->id)}}">{{$comment->news->title}}</a></td>
                             <td>{{$comment->body}}</td>
-                            <td class="d-flex align-items-center gap-2">
-                                <form method="post" action="{{route('admin.comments.update', $comment->id)}}">
-                                    @csrf
-                                    @method('PATCH')
-                                    <input type="submit" class="btn btn-primary" value="Одобрить">
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <form method="post" action="{{route('admin.comments.update', $comment->id)}}">
+                                        @csrf
+                                        @method('PATCH')
+                                        <input type="submit" class="btn btn-primary" value="Одобрить">
 
-                                </form>
-                                <form method="post" action="{{route('admin.comments.delete', $comment->id)}}">
-                                    @csrf
-                                    @method('DELETE')
-                                    <input type="submit" class="btn btn-danger" value="Удалить">
-                                </form>
+                                    </form>
+                                    <form method="post" action="{{route('admin.comments.delete', $comment->id)}}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <input type="submit" class="btn btn-danger" value="Удалить">
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @endforeach

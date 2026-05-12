@@ -27,4 +27,18 @@ class CommentController extends Controller
         $comment->delete();
         return redirect()->back()->with('success','Комментарий успешно удалён');
     }
+
+    public function CommentStore($id){
+        if(!auth()->check()){
+            return redirect()->route('login');
+        }
+
+        Comment::query()->create([
+            'news_id' => $id,
+            'author' => auth()->user()->name,
+            'body' => request('comments'),
+        ]);
+
+        return redirect()->back()->with(['success' => 'Комментарий успешно оставлен']);
+    }
 }

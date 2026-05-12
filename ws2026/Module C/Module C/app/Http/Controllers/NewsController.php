@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\NewsFiltersRequest;
 use App\Http\Requests\NewsFormRequest;
 use App\Models\Category;
+use App\Models\Comment;
 use App\Models\News;
 use Illuminate\Http\Request;
 
@@ -29,11 +30,13 @@ class NewsController extends Controller
         if(auth()->check() && auth()->user()->role === 'ADMIN'){
             $news = News::query()->findOrFail($id);
             $news->update(['views' => $news->views + 1]);
-            return view('news', compact('news'));
+            $comments = Comment::query()->where('news_id', $id)->where('status', 'approved')->get();
+            return view('news', compact('news', 'comments'));
         }
         $news = News::query()->where('status', 'PUBLISHED')->findOrFail($id);
         $news->update(['views' => $news->views + 1]);
-        return view('news', compact('news'));
+        $comments = Comment::query()->where('news_id', $id)->where('status', 'approved')->get();
+        return view('news', compact('news', 'comments'));
     }
 
     public function adminAllNews(NewsFiltersRequest $request){

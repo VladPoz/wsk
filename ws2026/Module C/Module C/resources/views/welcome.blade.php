@@ -21,11 +21,13 @@
                 <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
                     <a href="{{route('news', $item->id)}}" class="card p-3 shadow h-100 text-decoration-none">
                         <img class="mb-3 rounded-2" height="200px" src="http://127.0.0.1:8000/storage/{{$item->image}}" alt="img">
-                        <p class="fs-5 mb-1">{{$item->title}}</p>
-                        <p class="fs-5 mb-1">Категория: {{$item->category->name}}</p>
-                        <p class="fs-5 mb-1">Автор: {{$item->author}}</p>
-                        <p class="fs-5 mb-1">Дата публикации: {{$item->created_at}}</p>
-                        <p class="fs-5 mb-0">Просмотров: {{$item->views}}</p>
+                        <p class="fs-5">{{$item->title}}</p>
+                        <div class="my-auto d-flex flex-column gap-0">
+                            <p>Категория: {{$item->category->name}}</p>
+                            <p>Автор: {{$item->author}}</p>
+                            <p>Дата публикации: {{$item->created_at}}</p>
+                            <p>Просмотров: {{$item->views}}</p>
+                        </div>
                     </a>
                 </div>
             @endforeach

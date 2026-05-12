@@ -28,13 +28,15 @@
                                 <td>{{$category->id}}</td>
                                 <td>{{$category->name}}</td>
                                 <td>{{$category->news_count}}</td>
-                                <td class="d-flex align-items-center gap-2">
-                                    <a class="btn btn-primary" href={{route('admin.category.edit', $category->id)}}>Редактировать</a>
-                                    <form method="post" action="{{route('admin.category.delete', $category->id)}}">
-                                        @csrf
-                                        @method('DELETE')
-                                        <input type="submit" class="btn btn-danger" value="Удалить">
-                                    </form>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <a class="btn btn-primary" href={{route('admin.category.edit', $category->id)}}>Редактировать</a>
+                                        <form method="post" action="{{route('admin.category.delete', $category->id)}}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <input type="submit" class="btn btn-danger" value="Удалить">
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach
