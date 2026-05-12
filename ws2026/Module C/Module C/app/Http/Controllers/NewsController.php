@@ -64,7 +64,7 @@ class NewsController extends Controller
 
         News::query()->create($data);
 
-        return redirect()->route('admin.allNews');
+        return redirect()->route('admin.allNews')->with(['success' => 'Новость успешно создана']);
     }
 
     public function adminNewsEdit($id){
@@ -84,6 +84,6 @@ class NewsController extends Controller
 
         $news->update($data);
 
-        return redirect()->route('admin.allNews');
+        return redirect()->route('admin.allNews')->with(['success' => 'Новость успешно обновлена']);
     }
 }

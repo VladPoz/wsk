@@ -77,6 +77,7 @@ function Events(){
                                 </div>
                             </div>
                         </div>
+                        {/*цфавцфв*/}
                         <div className="col-lg-4 mb-3">
                             <div className={'bg-dark text-light p-3 rounded-3 h-100'}>
                                 <h2 className={'text-center'}>Участники</h2>

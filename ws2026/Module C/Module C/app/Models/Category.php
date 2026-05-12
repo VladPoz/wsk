@@ -10,4 +10,8 @@ class Category extends Model
 
     protected $table = 'categories';
     protected $fillable = ['name', 'views'];
+
+    public function news(){
+        return $this->hasMany(News::class);
+    }
 }

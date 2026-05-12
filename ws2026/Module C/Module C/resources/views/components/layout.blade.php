@@ -21,10 +21,10 @@
                     <a class="nav-link" href="{{route('admin.dashboard')}}">Панель управления</a>
                 @endif
 
-                @if(request()->routeIs('admin.dashboard', 'admin.allNews', 'admin.news.create', 'admin.news.edit'))
+                @if(request()->routeIs('admin.dashboard', 'admin.allNews', 'admin.news.create', 'admin.news.edit', 'admin.category', 'admin.category.store', 'admin.category.edit', 'admin.comments'))
                     <a class="nav-link" href="{{route('admin.allNews')}}">Список новостей</a>
-                    <a class="nav-link" href="">Категории</a>
-                    <a class="nav-link" href="">Коментарии</a>
+                    <a class="nav-link" href="{{route('admin.category')}}">Категории</a>
+                    <a class="nav-link" href="{{route('admin.comments')}}">Коментарии</a>
                 @endif
             </nav>
         </div>

@@ -8,7 +8,7 @@ import {useNavigate} from "react-router-dom";
 function Participant(){
 
     const navigate = useNavigate();
-    const [loading, setLoading ] = useState(false);
+    const [loading, setLoading ] = useState(true);
     const [name, setName] = useState("");
     const [phone, setPhone] = useState("");
     const [error, setError] = useState(null);
@@ -25,8 +25,9 @@ function Participant(){
                 setData(response.data)
                 setName(response.data.name);
                 setPhone(response.data.phone);
-                setLoading(true);
-            }).catch(()=>{
+                setLoading(false);
+            }).catch((err)=>{
+                console.log(err.response.data.message);
                 setLoading(false);
             });
         }
@@ -55,7 +56,7 @@ function Participant(){
     return(
         <>
             <Header/>
-            {!loading ? (
+            {loading ? (
                 <Loading/>
             ) : (
                 <>
@@ -63,8 +64,12 @@ function Participant(){
                         <div className="row my-4 g-3">
                             <div className="col-lg-6">
                                 <div className="p-3 h-100 bg-dark text-light rounded-3 d-flex flex-column justify-content-center g-5">
-                                    <p className={'fs-5'}>Имя: {data.name}</p>
-                                    <p className={'fs-5 mb-0'}>Телефон: {data.phone}</p>
+                                    {data.name ? (
+                                        <>
+                                            <p className={'fs-5'}>Имя: {data.name}</p>
+                                            <p className={'fs-5 mb-0'}>Телефон: {data.phone}</p>
+                                        </>
+                                    ) : (<p>Пофиля участника нету</p>)}
                                 </div>
                             </div>
                             <div className={'col-lg-6'}>

@@ -1,6 +1,6 @@
 <x-layout>
     <div class="container min-vh-100 d-flex align-items-center justify-content-center">
-        <form action="{{route('admin.news.update')}}" method="POST" class="card p-5" enctype="multipart/form-data">
+        <form action="{{route('admin.news.create')}}" method="POST" class="card p-5" enctype="multipart/form-data">
             @csrf
             <p class="text-center fs-4">Создать новость</p>
             <input class="form-control mb-3" type="text" placeholder="Заголовок" name="title" value="{{old('title')}}" required>
