@@ -20,16 +20,16 @@ class AuthController extends Controller
             'role' => 'USER',
             'api_token' => Str::random(60),
         ]);
-        return response()->json([new AuthResource($user)], 201);
+        return response()->json(new AuthResource($user), 201);
     }
 
     public function login(LoginRequest $request){
         $user = User::query()->where('username', $request->validated()['username'])->first();
-        if(!$user || Hash::check($request->validated()['password'], $user->password)){
+        if(!$user || !Hash::check($request->validated()['password'], $user->password)){
             return response()->json(['message' => 'Invalid login'], 422);
         }
         $user->update(['api_token' => Str::random(60)]);
-        return response()->json([new AuthResource($user)], 200);
+        return response()->json(new AuthResource($user), 200);
     }
 
     public function logout(){

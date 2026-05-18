@@ -16,7 +16,7 @@ function Events(){
 
     useEffect(() => {
         api.getEventById(id).then((response) => {
-            setData(response.data);
+            setData(response.data.data);
         });
         api.getMyStatus(id).then((response) => {
             setStatus(response.data.data);

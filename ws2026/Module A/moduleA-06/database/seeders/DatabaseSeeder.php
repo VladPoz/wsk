@@ -20,12 +20,12 @@ class DatabaseSeeder extends Seeder
 
         User::query()->create([
             'username' => 'user',
-            'users.password' => Hash::make('user'),
+            'users.password' => Hash::make('user123'),
         ]);
 
         User::query()->create([
             'username' => 'admin',
-            'users.password' => Hash::make('admin'),
+            'users.password' => Hash::make('admin123'),
             'users.role' => 'ADMIN',
         ]);
     }
