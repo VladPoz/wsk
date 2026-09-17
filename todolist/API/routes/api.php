@@ -13,9 +13,12 @@ Route::prefix('v1')->group(function () {
     });
     Route::middleware('auth:sanctum')->prefix('task')->group(function () {
         Route::get('/', [TaskController::class, 'getAllMyTasks']);
-        Route::get('/{task}', [TaskController::class, 'getMyTask']);
         Route::post('/', [TaskController::class, 'addMyTask']);
-        Route::put('/{task}', [TaskController::class, 'editMyTask']);
-        Route::delete('/{task}', [TaskController::class, 'deleteMyTask']);
+        Route::get('/{task}', [TaskController::class, 'getMyTask']);
+        Route::put('/{task}/edit', [TaskController::class, 'editMyTask']);
+        Route::patch('/{task}/status', [TaskController::class, 'toggleTaskStatus']);
+        Route::patch('/{task}/count/plus', [TaskController::class, 'plusCompletedTask']);
+        Route::patch('/{task}/count/minus', [TaskController::class, 'minusCompletedTask']);
+        Route::delete('/{task}/del', [TaskController::class, 'deleteMyTask']);
     });
 });

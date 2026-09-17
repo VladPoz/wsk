@@ -5,7 +5,7 @@ namespace App\Http\Requests\Task;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class editTaskRequest extends FormRequest
+class countCompletedTaskRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,11 +24,7 @@ class editTaskRequest extends FormRequest
     {
         return [
             //
-            'title' => 'string|max:255',
-            'description' => 'string|max:255|nullable',
-            'type' => 'string|in:single,multiple',
-            'count' => 'integer|nullable|min:1',
-            'priority' => 'string|in:low,medium,high',
+            'count' => 'required|integer|min:1',
         ];
     }
 }

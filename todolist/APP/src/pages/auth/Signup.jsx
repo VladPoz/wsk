@@ -42,7 +42,7 @@ export default function Signup(){
 
     return(
         <>
-            {isLoading & (
+            {isLoading && (
                 <>
                     <h2>Sign up</h2>
                     <form className={"form"} onSubmit={(e)=>{Register(e)}}>
